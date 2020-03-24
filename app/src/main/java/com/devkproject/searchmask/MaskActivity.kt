@@ -13,15 +13,21 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.devkproject.searchmask.api.MaskClient
+import com.devkproject.searchmask.api.MaskInterface
+import com.devkproject.searchmask.model.MaskModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_mask.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MaskActivity : AppCompatActivity() {
 
     var latitude: Double? = null
     var longitude: Double? = null
 
-        override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mask)
 
@@ -42,13 +48,11 @@ class MaskActivity : AppCompatActivity() {
             criteria.accuracy = Criteria.ACCURACY_MEDIUM
             criteria.powerRequirement = Criteria.POWER_MEDIUM
 
-
             locationManager.requestSingleUpdate(criteria, object : LocationListener {
                 override fun onLocationChanged(location: Location?) {
                     latitude = location!!.latitude
                     longitude = location!!.longitude
-
-                    Toast.makeText(applicationContext, "위도 : " + latitude + "경도 : " + longitude, Toast.LENGTH_LONG).show()
+                    api(latitude!!, longitude!!)
                 }
 
                 override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
@@ -67,5 +71,19 @@ class MaskActivity : AppCompatActivity() {
             Log.d("MaskActivity", longitude.toString())
             startActivity(intent)
         }
+    }
+
+    fun api(latitude: Double, longitude: Double) {
+        val maskService: MaskInterface = MaskClient.getClient()
+        maskService.getMaskGeo(latitude,longitude,1000).enqueue(object : Callback<MaskModel> {
+
+            override fun onResponse(call: Call<MaskModel>, response: Response<MaskModel>) {
+                Log.d("MaskActivity", "성공 : ${response.raw()}")
+            }
+
+            override fun onFailure(call: Call<MaskModel>, t: Throwable) {
+                Log.d("MaskActivity", "실패")
+            }
+        })
     }
 }
