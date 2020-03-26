@@ -38,14 +38,14 @@ class MaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mask)
 
-//        toMapActivity.setOnClickListener {
-//            val intent = Intent(this, MapActivity::class.java)
-//            intent.putExtra("latitude", latitude)
-//            intent.putExtra("longitude", longitude)
-//            Log.d("MaskActivity", latitude.toString())
-//            Log.d("MaskActivity", longitude.toString())
-//            startActivity(intent)
-//        }
+        toMapActivity.setOnClickListener {
+            val intent = Intent(this, MapActivity::class.java)
+            intent.putExtra("latitude", latitude)
+            intent.putExtra("longitude", longitude)
+            Log.d("MaskActivity", latitude.toString())
+            Log.d("MaskActivity", longitude.toString())
+            startActivity(intent)
+        }
     }
 
     fun api(latitude: Double, longitude: Double) {
@@ -55,21 +55,21 @@ class MaskActivity : AppCompatActivity() {
             override fun onResponse(call: Call<MaskModel>, response: Response<MaskModel>) {
                 if(response.isSuccessful) {
                     val body = response.body()
-                    Log.d("MaskActivity", body.toString())
                     Log.d("MaskActivity", "성공 : ${response.raw()}")
                     body?.let {
-                        setAdapter(it.stores)
+                        if(it.stores != null) {
+                            setAdapter(it.stores)
+                        }
                     }
                 }
             }
-
             override fun onFailure(call: Call<MaskModel>, t: Throwable) {
                 Log.d("MaskActivity", "실패")
             }
         })
     }
 
-    private fun setAdapter(maskList: ArrayList<MaskDetailResponse>) {
+    private fun setAdapter(maskList: ArrayList<MaskDetailResponse?>) {
         val mAdapter = MaskRVAdapter(this, maskList)
         maskRV.adapter = mAdapter
         maskRV.layoutManager = LinearLayoutManager(this)
@@ -83,7 +83,7 @@ class MaskActivity : AppCompatActivity() {
 
         @SuppressLint("MissingPermission")
         if(!isGPSEnabled && !isNetworkEnabled) {
-            Snackbar.make(layout1, "폰의 위치기능을 켜야 기능을 사용할 수 있습니다", Snackbar.LENGTH_LONG)
+            Snackbar.make(mask_layout, "폰의 위치기능을 켜야 기능을 사용할 수 있습니다", Snackbar.LENGTH_LONG)
                 .setAction("설정", View.OnClickListener {
                     val goToSettings = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     startActivity(goToSettings)
@@ -116,7 +116,7 @@ class MaskActivity : AppCompatActivity() {
         if(second_time - first_time < 2000){
             super.onBackPressed()
             finish()
-        }else Toast.makeText(this,"뒤로가기 버튼을 한번 더 누르시면 종료",Toast.LENGTH_SHORT).show()
+        } else Toast.makeText(this,"뒤로가기 버튼을 한번 더 누르시면 종료",Toast.LENGTH_SHORT).show()
         first_time = System.currentTimeMillis()
     }
 

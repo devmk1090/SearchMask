@@ -2,7 +2,7 @@ package com.devkproject.searchmask.model
 
 data class MaskModel(
     val count: Int,
-    val stores: ArrayList<MaskDetailResponse>
+    val stores: ArrayList<MaskDetailResponse?>
 )
 
 data class MaskDetailResponse (

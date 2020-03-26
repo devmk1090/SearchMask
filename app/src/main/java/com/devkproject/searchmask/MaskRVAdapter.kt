@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.devkproject.searchmask.model.MaskDetailResponse
 
-class MaskRVAdapter (val context: Context, val maskDetailResponse: ArrayList<MaskDetailResponse>) : RecyclerView.Adapter<MaskRVAdapter.ViewHolder>() {
+class MaskRVAdapter (val context: Context, val maskDetailResponse: ArrayList<MaskDetailResponse?>) : RecyclerView.Adapter<MaskRVAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.rv_item, parent,false)
 
