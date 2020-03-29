@@ -9,5 +9,16 @@
     <com.naver.maps.map.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <ImageButton
+            android:id="@+id/map_back_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:backgroundTint="#FFFFFF"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/back64"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+    </com.naver.maps.map.MapView>
 </androidx.constraintlayout.widget.ConstraintLayout>

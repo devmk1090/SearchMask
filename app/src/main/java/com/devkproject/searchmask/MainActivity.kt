@@ -13,6 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
+import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -22,10 +26,11 @@ import kotlinx.android.synthetic.main.activity_map.*
 
 class MainActivity : AppCompatActivity() {
 
+    private var first_time : Long = 0
+    private var second_time : Long = 0
     var latitude: Double? = null
     var longitude: Double? = null
-    private var handler: Handler? = null
-    private var runnable: Runnable? = null
+    var km: Int? = null
 
     companion object {
         private const val REQUEST_LOCATION_PERMISSION_CODE = 100
@@ -56,24 +61,43 @@ class MainActivity : AppCompatActivity() {
             val criteria = Criteria()
             criteria.accuracy = Criteria.ACCURACY_MEDIUM
             criteria.powerRequirement = Criteria.POWER_MEDIUM
-
             locationManager.requestSingleUpdate(criteria, object : LocationListener {
                 override fun onLocationChanged(location: Location?) {
                     latitude = location!!.latitude
                     longitude = location!!.longitude
-                    runnable = Runnable {
+                    ArrayAdapter.createFromResource(applicationContext, R.array.km_spinner, android.R.layout.simple_spinner_item)
+                        .also { adapter ->
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            km_spinner.adapter = adapter
+                        }
+                    km_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            when(position) {
+                                0 -> { km = 1000 }
+                                1 -> { km = 2000 }
+                                2 -> { km = 3000 }
+                            }
+                        }
+                        override fun onNothingSelected(parent: AdapterView<*>?) {}
+                    }
+                    map_btn.setOnClickListener {
                         val intent = Intent(applicationContext, MapActivity::class.java)
+                        intent.putExtra("km", km)
+                        Log.d("MainActivity", "반경" + km.toString())
                         intent.putExtra("latitude", latitude!!)
                         intent.putExtra("longitude", longitude!!)
                         startActivity(intent)
                         finish()
                     }
-                    handler = Handler()
-                    handler?.run {
-                        postDelayed(runnable, 2000)
+                    addr_btn.setOnClickListener {
+                        val intent = Intent(applicationContext, AddressActivity::class.java)
+                        intent.putExtra("addr", addr_txt.text.toString())
+                        intent.putExtra("latitude", latitude!!)
+                        intent.putExtra("longitude", longitude!!)
+                        startActivity(intent)
+                        finish()
                     }
                 }
-
                 override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 
                 override fun onProviderEnabled(provider: String?) {}
@@ -105,6 +129,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
 
+    override fun onBackPressed() {
+        second_time = System.currentTimeMillis()
+        if(second_time - first_time < 2000){
+            super.onBackPressed()
+            finishAffinity()
+        } else Toast.makeText(this,"뒤로가기 버튼을 한 번 더 누르면 종료", Toast.LENGTH_SHORT).show()
+        first_time = System.currentTimeMillis()
     }
 }

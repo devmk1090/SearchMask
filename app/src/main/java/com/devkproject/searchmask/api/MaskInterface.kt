@@ -12,4 +12,7 @@ interface MaskInterface {
                    @Query("lng") lng: Double,
                    @Query("m") radius: Int) : Call<MaskModel>
 
+    @GET("storesByAddr/json")
+    fun getMaskAddr(@Query("address") addr: String) : Call<MaskModel>
+
 }

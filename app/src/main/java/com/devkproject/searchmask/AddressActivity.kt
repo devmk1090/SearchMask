@@ -14,26 +14,21 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
-import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_map.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback {
+class AddressActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    var addr: String? = null
     private var first_time : Long = 0
     private var second_time : Long = 0
-    var latitude: Double? = null
-    var longitude: Double? = null
-    var km: Int? = null
-    private lateinit var locationSource: FusedLocationSource
 
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        private const val TAG = "AddressActivity"
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -42,20 +37,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
         }
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-        latitude = intent.getDoubleExtra("latitude", 0.0)
-        longitude = intent.getDoubleExtra("longitude", 0.0)
-        km = intent.getIntExtra("km", 1000)
+        addr = intent.getStringExtra("addr")
         NaverMapSdk.getInstance(this).client = NaverMapSdk.NaverCloudPlatformClient("urjpw136l7")
         mapView.getMapAsync(this)
     }
 
     override fun onMapReady(naverMap: NaverMap) {
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
-        naverMap.addOnLocationChangeListener { location -> }
-        val cameraUpdate = CameraUpdate.scrollTo(LatLng(latitude!!, longitude!!)).animate(CameraAnimation.Fly)
-        naverMap.moveCamera(cameraUpdate)
         val infoWindow = InfoWindow()
         infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(this) {
             override fun getText(p0: InfoWindow): CharSequence {
@@ -63,7 +50,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         val maskService: MaskInterface = MaskClient.getClient()
-        maskService.getMaskGeo(latitude!!,longitude!!, km!!).enqueue(object : Callback<MaskModel> {
+        maskService.getMaskAddr(addr!!).enqueue(object : Callback<MaskModel> {
             override fun onResponse(call: Call<MaskModel>, response: Response<MaskModel>) {
                 if (response != null && response.isSuccessful) {
                     val results : MaskModel? = response.body()
@@ -94,7 +81,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                             tag = "$addr\n" +
                                     "입고 시간: $stock\n" +
                                     "재고 : $subCaptionText\n" +
-                                    "${create?.let { simpleDateFormatter(it) }}"
+                            "${create?.let { simpleDateFormatter(it) }}"
                             setOnClickListener {
                                 infoWindow.open(this)
                                 true
@@ -102,6 +89,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                             isHideCollidedCaptions = true
                             map = naverMap
                         }
+                        val cameraUpdate = CameraUpdate.scrollTo(LatLng(lat!!, lng!!)).animate(
+                            CameraAnimation.Fly)
+                        naverMap.moveCamera(cameraUpdate)
                     }
                 }
             }
@@ -120,16 +110,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         val createDate = dateFormat.parse(create).time
         val diff = (curTime - createDate) / (24 * 60 * 60)
         return "${diff}분전 업데이트"
-    }
-    
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray) {
-        if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            return
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onBackPressed() {
