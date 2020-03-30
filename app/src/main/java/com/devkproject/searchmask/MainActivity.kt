@@ -1,7 +1,6 @@
 package com.devkproject.searchmask
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,7 +10,6 @@ import android.location.LocationListener
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.provider.Settings
 import android.util.Log
 import android.view.View
@@ -22,7 +20,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_map.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     var latitude: Double? = null
     var longitude: Double? = null
     var km: Int? = null
+    var addr: String? = null
 
     companion object {
         private const val REQUEST_LOCATION_PERMISSION_CODE = 100
@@ -89,15 +87,46 @@ class MainActivity : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                     }
+                    ArrayAdapter.createFromResource(applicationContext, R.array.spinner_region, android.R.layout.simple_spinner_item)
+                        .also { adapter ->
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            region_spinner.adapter = adapter
+                        }
+                    region_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            when(position) {
+                                0 -> { setSigunSpinner(R.array.spinner_region_seoul) }
+                                1 -> { setSigunSpinner(R.array.spinner_region_busan) }
+                                2 -> { setSigunSpinner(R.array.spinner_region_daegu) }
+                                3 -> { setSigunSpinner(R.array.spinner_region_incheon) }
+                                4 -> { setSigunSpinner(R.array.spinner_region_gwangju) }
+                                5 -> { setSigunSpinner(R.array.spinner_region_daejeon) }
+                                6 -> { setSigunSpinner(R.array.spinner_region_ulsan) }
+                                7 -> { setSigunSpinner(R.array.spinner_region_sejong) }
+                                8 -> { setSigunSpinner(R.array.spinner_region_gyeonggi) }
+                                9 -> { setSigunSpinner(R.array.spinner_region_gangwon) }
+                                10 -> { setSigunSpinner(R.array.spinner_region_chung_buk) }
+                                11 -> { setSigunSpinner(R.array.spinner_region_chung_nam) }
+                                12 -> { setSigunSpinner(R.array.spinner_region_jeon_buk) }
+                                13 -> { setSigunSpinner(R.array.spinner_region_jeon_nam) }
+                                14 -> { setSigunSpinner(R.array.spinner_region_gyeong_buk) }
+                                15 -> { setSigunSpinner(R.array.spinner_region_gyeong_nam) }
+                                16 -> { setSigunSpinner(R.array.spinner_region_jeju) }
+
+                            }
+                        }
+                        override fun onNothingSelected(parent: AdapterView<*>?) {}
+                    }
                     addr_btn.setOnClickListener {
+                        addr = region_spinner.selectedItem.toString() + " " + sigun_spinner.selectedItem.toString()
                         val intent = Intent(applicationContext, AddressActivity::class.java)
-                        intent.putExtra("addr", addr_txt.text.toString())
-                        intent.putExtra("latitude", latitude!!)
-                        intent.putExtra("longitude", longitude!!)
+
+                        intent.putExtra("addr", addr)
                         startActivity(intent)
                         finish()
                     }
                 }
+
                 override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 
                 override fun onProviderEnabled(provider: String?) {}
@@ -105,6 +134,22 @@ class MainActivity : AppCompatActivity() {
                 override fun onProviderDisabled(provider: String?) {}
 
             }, null)
+        }
+    }
+
+    private fun setSigunSpinner(list: Int) {
+        ArrayAdapter.createFromResource(applicationContext, list, android.R.layout.simple_spinner_item)
+            .also { adapter ->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                sigun_spinner.adapter = adapter
+            }
+        sigun_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                when(position) {
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 
@@ -136,7 +181,7 @@ class MainActivity : AppCompatActivity() {
         if(second_time - first_time < 2000){
             super.onBackPressed()
             finishAffinity()
-        } else Toast.makeText(this,"뒤로가기 버튼을 한 번 더 누르면 종료", Toast.LENGTH_SHORT).show()
+        } else Toast.makeText(this,"한 번 더 누르면 종료됩니다", Toast.LENGTH_SHORT).show()
         first_time = System.currentTimeMillis()
     }
 }

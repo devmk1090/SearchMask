@@ -5,20 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_layout"
+    android:background="#E9E9E9"
     tools:context=".MainActivity">
     <TextView
         android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="공적 마스크"
-        android:textColor="#000000"
-        android:textSize="50dp"
+        android:text="공적 마스크 찾기"
+        android:textSize="45dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13" />
+        app:layout_constraintVertical_bias="0.10" />
 
     <ImageView
         android:id="@+id/mask_image"
@@ -33,7 +33,7 @@
         android:id="@+id/map1"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintTop_toBottomOf="@+id/mask_image"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -41,15 +41,19 @@
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/map_btn"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:backgroundTint="#00AFFF"
-            android:text="현재 위치 검색 (반경)"
+            android:text="현재 위치 검색"
             android:textSize="15dp"
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
         <Spinner
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/custom_spinner"
             android:id="@+id/km_spinner"
             android:entries="@array/km_spinner"
             android:layout_width="wrap_content"
@@ -59,60 +63,56 @@
 
     <LinearLayout
         android:id="@+id/map2"
-        android:layout_margin="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         app:layout_constraintTop_toBottomOf="@+id/map1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/addr_txt"
-            android:hint="주소를 입력하세요"
+        android:layout_height="40dp">
+        <Spinner
             android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/custom_spinner"
+            android:id="@+id/region_spinner"
+            android:entries="@array/spinner_region"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/addr_btn"
+            android:layout_height="match_parent"/>
+        <Spinner
+            android:layout_marginRight="5dp"
+            android:layout_weight="2"
+            android:background="@drawable/custom_spinner"
+            android:id="@+id/sigun_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#00AFFF"
-            android:text="주소로 검색"
-            android:textColor="#ffffff"
-            android:textSize="15dp"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"/>
     </LinearLayout>
-    <TextView
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
+
+    <Button
         app:layout_constraintTop_toBottomOf="@+id/map2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/map3"
-        android:text="예) 서울특별시 강남구, 경기도 안양시 동안구\n충청남도 태안군, 울산광역시 남구"
-        android:textStyle="bold"
-        android:textSize="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <LinearLayout
         android:layout_margin="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/map3"
+        android:id="@+id/addr_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00AFFF"
+        android:text="주소 검색"
+        android:textColor="#ffffff"
+        android:textSize="15dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:textStyle="bold"
+        android:textSize="12dp"
+        android:layout_marginBottom="5dp"
+        android:text="App Version : 1.0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/hospital_btn"
-            android:backgroundTint="#00AFFF"
-            android:textSize="15dp"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:text="선별 진료소"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

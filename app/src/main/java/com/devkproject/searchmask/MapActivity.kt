@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.devkproject.searchmask.api.MaskClient
 import com.devkproject.searchmask.api.MaskInterface
+import com.devkproject.searchmask.api.RestClient
 import com.devkproject.searchmask.model.MaskModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -62,7 +62,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 return infoWindow.marker?.tag as CharSequence? ?: ""
             }
         }
-        val maskService: MaskInterface = MaskClient.getClient()
+        val maskService: MaskInterface = RestClient.getMaskClient()
         maskService.getMaskGeo(latitude!!,longitude!!, km!!).enqueue(object : Callback<MaskModel> {
             override fun onResponse(call: Call<MaskModel>, response: Response<MaskModel>) {
                 if (response != null && response.isSuccessful) {
@@ -137,7 +137,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         if(second_time - first_time < 2000){
             super.onBackPressed()
             finishAffinity()
-        } else Toast.makeText(this,"뒤로가기 버튼을 한 번 더 누르면 종료", Toast.LENGTH_SHORT).show()
+        } else Toast.makeText(this,"한 번 더 누르면 종료됩니다", Toast.LENGTH_SHORT).show()
         first_time = System.currentTimeMillis()
     }
 }

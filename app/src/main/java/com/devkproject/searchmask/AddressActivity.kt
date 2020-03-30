@@ -6,14 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.devkproject.searchmask.api.MaskClient
 import com.devkproject.searchmask.api.MaskInterface
+import com.devkproject.searchmask.api.RestClient
 import com.devkproject.searchmask.model.MaskModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_map.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,13 +26,17 @@ class AddressActivity : AppCompatActivity(), OnMapReadyCallback {
     var addr: String? = null
     private var first_time : Long = 0
     private var second_time : Long = 0
+    private lateinit var locationSource: FusedLocationSource
 
     companion object {
         private const val TAG = "AddressActivity"
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+        locationSource = FusedLocationSource(this, AddressActivity.LOCATION_PERMISSION_REQUEST_CODE)
+
         map_back_btn.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -43,13 +48,15 @@ class AddressActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(naverMap: NaverMap) {
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
         val infoWindow = InfoWindow()
         infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(this) {
             override fun getText(p0: InfoWindow): CharSequence {
                 return infoWindow.marker?.tag as CharSequence? ?: ""
             }
         }
-        val maskService: MaskInterface = MaskClient.getClient()
+        val maskService: MaskInterface = RestClient.getMaskClient()
         maskService.getMaskAddr(addr!!).enqueue(object : Callback<MaskModel> {
             override fun onResponse(call: Call<MaskModel>, response: Response<MaskModel>) {
                 if (response != null && response.isSuccessful) {
@@ -112,12 +119,22 @@ class AddressActivity : AppCompatActivity(), OnMapReadyCallback {
         return "${diff}분전 업데이트"
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray) {
+        if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            return
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     override fun onBackPressed() {
         second_time = System.currentTimeMillis()
         if(second_time - first_time < 2000){
             super.onBackPressed()
             finishAffinity()
-        } else Toast.makeText(this,"뒤로가기 버튼을 한 번 더 누르면 종료", Toast.LENGTH_SHORT).show()
+        } else Toast.makeText(this,"한 번 더 누르면 종료됩니다", Toast.LENGTH_SHORT).show()
         first_time = System.currentTimeMillis()
     }
 }
