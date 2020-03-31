@@ -12,14 +12,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import java.time.DayOfWeek
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -78,6 +83,8 @@ class MainActivity : AppCompatActivity() {
                         }
                         override fun onNothingSelected(parent: AdapterView<*>?) {}
                     }
+                    km_spinner.setSelection(1)
+
                     map_btn.setOnClickListener {
                         val intent = Intent(applicationContext, MapActivity::class.java)
                         intent.putExtra("km", km)
@@ -174,6 +181,49 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (getDayOfWeek() == "월요일") {
+            dayOfWeek_txt.text = getDayOfWeek() + " 구입 가능 출생연도 끝자리 : 1,6"
+        } else if (getDayOfWeek() == "화요일") {
+            dayOfWeek_txt.text = getDayOfWeek() + " 구입 가능 출생연도 끝자리 : 2,7"
+        } else if (getDayOfWeek() == "수요일") {
+            dayOfWeek_txt.text = getDayOfWeek() + " 구입 가능 출생연도 끝자리 : 3,8"
+        } else if (getDayOfWeek() == "목요일") {
+            dayOfWeek_txt.text = getDayOfWeek() + " 구입 가능 출생연도 끝자리 : 4,9"
+        } else if (getDayOfWeek() == "금요일") {
+            dayOfWeek_txt.text = getDayOfWeek() + " 구입 가능 출생연도 끝자리 : 5,0"
+        } else {
+            dayOfWeek_txt.text = getDayOfWeek() + "엔 주 중에 못 산 사람 구입 가능"
+        }
+    }
+
+    private fun getDayOfWeek() :String {
+        val instance = Calendar.getInstance()
+        val dayOfWeek = instance.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.KOREA)
+        val test: String = "토요일"
+        val test1: String = "일요일"
+        return dayOfWeek
+    }
+
+    private fun maskPopup() {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view = inflater.inflate(R.layout.alert_popup, null)
+        val alert_txt: TextView = view.findViewById(R.id.alert_txt)
+        alert_txt.text = "주민등록증이나 공적신분증 지참\n\n" +
+            "출생연도 끝자리 기점\n" +
+                "1, 6 -> 월요일\n" +
+                "2, 7 -> 화요일\n" +
+                "3, 8 -> 수요일\n" +
+                "4, 9 -> 목요일\n" +
+                "5, 0 -> 금요일\n" +
+                "주중에 못 산 사람 -> 토,일요일"
+
+        val alertDialog = AlertDialog.Builder(this)
+            .setTitle("마스크 5부제")
+            .setPositiveButton("확인", null)
+            .create()
+        alertDialog.setView(view)
+        alertDialog.show()
     }
 
     override fun onBackPressed() {
