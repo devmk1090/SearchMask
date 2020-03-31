@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         @SuppressLint("MissingPermission")
         if(!isGPSEnabled && !isNetworkEnabled) {
-            Snackbar.make(main_layout, "폰의 위치기능을 켜야 기능을 사용할 수 있습니다", Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(main_layout, "폰의 위치기능을 켜야 사용할 수 있습니다", Snackbar.LENGTH_INDEFINITE)
                 .setAction("설정") {
                     val goToSettings = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     startActivity(goToSettings)
