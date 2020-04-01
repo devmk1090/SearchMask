@@ -42,7 +42,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
         MobileAds.initialize(this) {}
-        mAdView = findViewById(R.id.ad_View)
+        mAdView = this.findViewById(R.id.ad_View)
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
 

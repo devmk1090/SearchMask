@@ -40,11 +40,11 @@ class AddressActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
         MobileAds.initialize(this) {}
-        mAdView = findViewById(R.id.ad_View)
+        mAdView = this.findViewById(R.id.ad_View)
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
 
-        locationSource = FusedLocationSource(this, AddressActivity.LOCATION_PERMISSION_REQUEST_CODE)
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         map_back_btn.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
