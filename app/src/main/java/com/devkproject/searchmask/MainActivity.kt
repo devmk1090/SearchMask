@@ -100,21 +100,6 @@ class MainActivity : AppCompatActivity() {
                             when(position) {
                                 0 -> { setSigunSpinner(R.array.spinner_region_seoul) }
                                 1 -> { setSigunSpinner(R.array.spinner_region_busan) }
-                                2 -> { setSigunSpinner(R.array.spinner_region_daegu) }
-                                3 -> { setSigunSpinner(R.array.spinner_region_incheon) }
-                                4 -> { setSigunSpinner(R.array.spinner_region_gwangju) }
-                                5 -> { setSigunSpinner(R.array.spinner_region_daejeon) }
-                                6 -> { setSigunSpinner(R.array.spinner_region_ulsan) }
-                                7 -> { setSigunSpinner(R.array.spinner_region_sejong) }
-                                8 -> { setSigunSpinner(R.array.spinner_region_gyeonggi) }
-                                9 -> { setSigunSpinner(R.array.spinner_region_gangwon) }
-                                10 -> { setSigunSpinner(R.array.spinner_region_chung_buk) }
-                                11 -> { setSigunSpinner(R.array.spinner_region_chung_nam) }
-                                12 -> { setSigunSpinner(R.array.spinner_region_jeon_buk) }
-                                13 -> { setSigunSpinner(R.array.spinner_region_jeon_nam) }
-                                14 -> { setSigunSpinner(R.array.spinner_region_gyeong_buk) }
-                                15 -> { setSigunSpinner(R.array.spinner_region_gyeong_nam) }
-                                16 -> { setSigunSpinner(R.array.spinner_region_jeju) }
 
                             }
                         }
@@ -190,6 +175,11 @@ class MainActivity : AppCompatActivity() {
             dayOfWeek_txt.text = getDayOfWeek() + " 구입 가능 출생연도 끝자리 : 5,0"
         } else {
             dayOfWeek_txt.text = getDayOfWeek() + "엔 주 중에 못 산 사람 구입 가능"
+        }
+
+        hospital_btn.setOnClickListener {
+            val intent = Intent(applicationContext, HospitalActivity::class.java)
+            startActivity(intent)
         }
     }
 

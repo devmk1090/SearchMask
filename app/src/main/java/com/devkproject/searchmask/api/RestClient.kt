@@ -15,4 +15,12 @@ object RestClient {
             .build()
             .create(MaskInterface::class.java)
     }
+//    fun getHospitalClient(): HospitalInterface {
+//        @Suppress("DEPRECATION")
+//        return Retrofit.Builder()
+//            .baseUrl(HOSPITAL_URL)
+//            .addConverterFactory(SimpleXmlConverterFactory.create())
+//            .build()
+//            .create(HospitalInterface::class.java)
+//    }
 }

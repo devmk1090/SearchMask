@@ -7,7 +7,14 @@
     android:id="@+id/main_layout"
     android:background="#E9E9E9"
     tools:context=".MainActivity">
-
+    <Button
+        android:id="@+id/hospital_btn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="선별 진료소"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/text1"
         android:layout_width="wrap_content"
