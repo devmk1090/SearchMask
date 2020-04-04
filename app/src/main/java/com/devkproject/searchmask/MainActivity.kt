@@ -174,9 +174,8 @@ class MainActivity : AppCompatActivity() {
         } else if (getDayOfWeek() == "금요일") {
             dayOfWeek_txt.text = getDayOfWeek() + " 구입 가능 출생연도 끝자리 : 5,0"
         } else {
-            dayOfWeek_txt.text = getDayOfWeek() + "엔 주 중에 못 산 사람 구입 가능"
+            dayOfWeek_txt.text = getDayOfWeek() + "은 주 중에 못 산 사람 구입 가능"
         }
-
         hospital_btn.setOnClickListener {
             val intent = Intent(applicationContext, HospitalActivity::class.java)
             startActivity(intent)
@@ -186,8 +185,6 @@ class MainActivity : AppCompatActivity() {
     private fun getDayOfWeek() :String {
         val instance = Calendar.getInstance()
         val dayOfWeek = instance.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.KOREA)
-        val test: String = "토요일"
-        val test1: String = "일요일"
         return dayOfWeek
     }
 

@@ -14,4 +14,3 @@ interface HospitalInterface {
                     @Query("spclAdmTyCd") type: String) : Call<HospitalModel>
 }
 //api/subway/{apikey}/json/stationByLine/1/100/{linenum}
-
