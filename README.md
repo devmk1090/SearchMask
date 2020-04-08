@@ -10,6 +10,6 @@
 행정구역 '시' , '구', '군' 까지 선택하여 공적 마스크 재고를 확인할 수 있습니다.
 
 * 마스크 5부제 정보  
-오늘 구입 가능한 출생연도 정보를 확인하세요.
+오늘 구입 가능한 출생연도 정보를 확인하세요.  
 
-* 스크린샷  
+<img src="https://user-images.githubusercontent.com/48673676/78763853-a78def00-79c0-11ea-92b8-7ae60aefee72.jpg" width="30%"> <img src="https://user-images.githubusercontent.com/48673676/78763910-bffe0980-79c0-11ea-8b3f-0fe95a532de5.jpg" width="30%">
